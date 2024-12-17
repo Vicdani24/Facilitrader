@@ -57,6 +57,16 @@
     }
     button:hover {
       background-color: #e64a19;
+      }
+    .back-home {
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
+    }
+    .back-home a {
+      color: #28a745;
+      font-size: 1.5em;
+      text-decoration: none;
 
   </style>
 </head>
@@ -64,7 +74,9 @@
   <h1>Jogos de Basquete - Hoje e Amanhã</h1>
   <button id="load-games">Carregar Jogos de Basquete</button>
   <div id="basketball-games">Carregando jogos...</div>
-
+<div class="back-home">
+      <a href="index.html">🏠</a>
+</div>
   <script>
     const apiKey = "eec454bd8e0651ad7b01e6a08e9bf96b";
     const basketballUrl = "https://v1.basketball.api-sports.io/games";
