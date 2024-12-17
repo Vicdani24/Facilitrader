@@ -57,6 +57,16 @@
     }
     button:hover {
       background-color: #e64a19;
+              }
+    .back-home {
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
+    }
+    .back-home a {
+      color: #28a745;
+      font-size: 1.5em;
+      text-decoration: none;
     }
   </style>
 </head>
@@ -100,7 +110,6 @@
 
             gameDiv.innerHTML = `
               <p><strong>Liga:</strong> ${game.league.name}</p>
-              <p><strong>País:</strong> ${game.league.country}</p>
               <p><strong>Horário:</strong> ${new Date(game.date).toLocaleTimeString()}</p>
               <p><strong>Partida:</strong> ${game.teams.home.name} vs ${game.teams.away.name}</p>
             `;
@@ -115,6 +124,10 @@
     }
 
     document.getElementById("load-games").addEventListener("click", fetchBasketballGames);
+<div class="back-home">
+      <a href="index.html">🏠</a>
+    </div>
   </script>
+  
 </body>
 </html>
