@@ -1,40 +1,123 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Jogos de Hoje</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      margin: 20px;
-      background-color: #f4f4f9;
-      color: #333;
+      font-family: "Segoe UI", Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background: linear-gradient(135deg, #f8f9fc, #e8ecf3);
+      color: #222;
     }
     h1 {
       text-align: center;
-      color: #444;
+      color: #2c3e50;
+      margin-bottom: 30px;
     }
     #games {
-      margin-top: 20px;
+      max-width: 700px;
+      margin: 0 auto;
     }
     .game {
-      padding: 10px;
-      margin: 10px 0;
+      padding: 15px;
+      margin-bottom: 15px;
       border: 1px solid #ddd;
-      border-radius: 5px;
+      border-radius: 10px;
       background: #fff;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .game:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    }
+    .league {
+      font-weight: bold;
+      color: #2980b9;
+      margin-bottom: 5px;
+    }
+    .teams {
+      font-size: 1.1em;
+      margin-bottom: 5px;
+    }
+    .time {
+      color: #555;
+      font-size: 0.95em;
+    }
+    .error {
+      color: red;
+      text-align: center;
+    }
+    .loading {
+      text-align: center;
+      color: #555;
+      font-style: italic;
     }
   </style>
 </head>
 <body>
-  <h1>Jogos de Hoje</h1>
-  <div id="games">Carregando jogos...</div>
+  <h1>⚽ Jogos de Hoje</h1>
+  <div id="games" class="loading">Carregando jogos...</div>
 
   <script>
-    // Substitua pela sua chave da API
     const apiKey = "eec454bd8e0651ad7b01e6a08e9bf96b";
     const apiUrl = "https://v3.football.api-sports.io/fixtures";
+    const today = new Date().toISOString().split("T")[0];
+
+    const headers = {
+      "x-rapidapi-host": "v3.football.api-sports.io",
+      "x-rapidapi-key": apiKey
+    };
+
+    async function fetchGames() {
+      const gamesDiv = document.getElementById("games");
+      gamesDiv.innerHTML = "<p class='loading'>Carregando jogos...</p>";
+
+      try {
+        const response = await fetch(`${apiUrl}?date=${today}`, { headers });
+        if (!response.ok) throw new Error(`Erro HTTP: ${response.status}`);
+
+        const data = await response.json();
+
+        if (!data.response || data.response.length === 0) {
+          gamesDiv.innerHTML = "<p>Nenhum jogo encontrado para hoje.</p>";
+          return;
+        }
+
+        gamesDiv.innerHTML = ""; // limpa conteúdo anterior
+
+        data.response.forEach(fixture => {
+          const leagueName = fixture.league?.name || "Liga desconhecida";
+          const home = fixture.teams?.home?.name || "Time A";
+          const away = fixture.teams?.away?.name || "Time B";
+          const matchTime = new Date(fixture.fixture?.date).toLocaleTimeString("pt-BR", {
+            hour: "2-digit",
+            minute: "2-digit"
+          });
+
+          const gameDiv = document.createElement("div");
+          gameDiv.className = "game";
+          gameDiv.innerHTML = `
+            <div class="league">${leagueName}</div>
+            <div class="teams">${home} vs ${away}</div>
+            <div class="time">Horário: ${matchTime}</div>
+          `;
+          gamesDiv.appendChild(gameDiv);
+        });
+
+      } catch (error) {
+        console.error("Erro ao buscar os jogos:", error);
+        gamesDiv.innerHTML = "<p class='error'>Erro ao carregar os jogos. Tente novamente mais tarde.</p>";
+      }
+    }
+
+    fetchGames();
+  </script>
+</body>
+</html>    const apiUrl = "https://v3.football.api-sports.io/fixtures";
 
     // Obter a data de hoje no formato YYYY-MM-DD
     const today = new Date().toISOString().split("T")[0];
